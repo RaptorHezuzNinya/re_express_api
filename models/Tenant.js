@@ -26,8 +26,8 @@ TenantSchema.methods.tenantToJSON = function () {
 		iban: this.iban,
 		rent: this.rent,
 		phone: this.phone,
-		userId: this.userId,
-		uuId: this.userRefId
+		uuId: this.uuId,
+		userId: this.userId
 	};
 };
 
