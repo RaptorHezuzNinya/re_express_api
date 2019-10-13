@@ -15,7 +15,6 @@ var TenantSchema = new mongoose.Schema({
 
 TenantSchema.plugin(uniqueValidator, { message: 'is already taken.' });
 
-
 TenantSchema.methods.tenantToJSON = function () {
 	return {
 		id: this.id,
