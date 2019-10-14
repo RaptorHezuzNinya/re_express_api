@@ -10,7 +10,7 @@ var TenantSchema = new mongoose.Schema({
 	rent: Number,
 	phone: { type: Number },
 	uuId: { type: String, lowercase: true, unique: true, required: [true, "can't be blank"] },
-	userId: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+	userRef: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 }, { timestamps: true });
 
 TenantSchema.plugin(uniqueValidator, { message: 'is already taken.' });
@@ -26,7 +26,7 @@ TenantSchema.methods.tenantToJSON = function () {
 		rent: this.rent,
 		phone: this.phone,
 		uuId: this.uuId,
-		userId: this.userId
+		userRef: this.userRef
 	};
 };
 
