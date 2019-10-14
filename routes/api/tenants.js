@@ -47,10 +47,16 @@ router.post('/tenants', auth.required, function (req, res, next) {
         tenant.iban = req.body.tenant.iban;
         tenant.rent = req.body.tenant.rent;
         tenant.phone = req.body.tenant.phone;
-        tenant.userId = user;
+        tenant.userRef = user;
         tenant.uuId = uid.randomUUID(9);
         tenant.save().then(function () {
-            return res.json({ tenant: tenant.tenantToJSON() });
+            user.setTenantRef(tenant);
+            user.save().then(function () {
+                return res.json({ tenant: tenant.tenantToJSON() });
+
+            })
+            console.log('UNICORN');
+
         }).catch(next);
     })
 
