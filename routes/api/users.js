@@ -61,6 +61,7 @@ router.post('/users/login', function (req, res, next) {
 		if (err) { return next(err); }
 
 		if (user) {
+
 			var token = user.generateJWT();
 			user.setToken(token);
 			user.token = token;

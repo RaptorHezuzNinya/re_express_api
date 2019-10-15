@@ -45,6 +45,12 @@ UserSchema.methods.setPassword = function (password) {
 };
 
 UserSchema.methods.setToken = async function (token) {
+	if (this.tokens.length === 10) {
+		this.tokens.pop();
+		this.tokens = this.tokens.concat({ token })
+		console.log("WE HAVE 10 unicorn");
+		return await this.save();
+	}
 	this.tokens = this.tokens.concat({ token })
 	await this.save()
 };
