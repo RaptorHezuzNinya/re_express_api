@@ -17,7 +17,7 @@ TenantSchema.plugin(uniqueValidator, { message: 'is already taken.' });
 
 TenantSchema.methods.tenantToJSON = function () {
 	return {
-		id: this.id,
+		_id: this.id,
 		email: this.email,
 		accountHolder: this.accountHolder,
 		firstName: this.firstName,
