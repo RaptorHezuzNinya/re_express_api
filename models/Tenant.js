@@ -26,7 +26,9 @@ TenantSchema.methods.tenantToJSON = function () {
 		rent: this.rent,
 		phone: this.phone,
 		uuId: this.uuId,
-		userRef: this.userRef
+		userRef: this.userRef,
+		updatedAt: this.updatedAt,
+		createdAt: this.createdAt
 	};
 };
 
