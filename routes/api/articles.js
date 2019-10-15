@@ -223,6 +223,7 @@ router.delete('/:article/favorite', auth.required, function (req, res, next) {
 	}).catch(next);
 });
 
+// return all user's tenants
 // return an article's comments
 router.get('/:article/comments', auth.optional, function (req, res, next) {
 	Promise.resolve(req.payload ? User.findById(req.payload.id) : null).then(function (user) {

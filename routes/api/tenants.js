@@ -7,34 +7,12 @@ var auth = require('../auth');
 var ShortUniqueId = require('short-unique-id');
 var uid = new ShortUniqueId();
 
-// should be somethingl ike get articles comments
-// router.get('/tenants', auth.required, function (req, res, next) {
-//     User.findById(req.payload.id).then(function (user) {
-//         ObjectId("4ecc05e55dd98a436ddcc47c"
-//     });
-// });
-
-// router.get('/tenants', auth.required, function (req, res, next) {
-//     Promise.resolve(req.payload ? User.findById(req.payload.id) : null).then(function (user) {
-//         return req.article.populate({
-//             path: 'comments',
-//             populate: {
-//                 path: 'author'
-//             },
-//             options: {
-//                 sort: {
-//                     createdAt: 'desc'
-//                 }
-//             }
-//         }).execPopulate().then(function (article) {
-//             return res.json({
-//                 comments: req.article.comments.map(function (comment) {
-//                     return comment.toJSONFor(user);
-//                 })
-//             });
-//         });
-//     }).catch(next);
-// });
+// get tenants by user ref
+router.get('/tenants/:userRef', function (req, res, next) {
+    Tenant.find({ "userRef": req.params.userRef }).then(function (tenants) {
+        return res.json({ tenants: tenants });
+    }).catch(next);
+});
 
 router.post('/tenants', auth.required, function (req, res, next) {
     User.findById(req.payload.id).then(function (user) {
