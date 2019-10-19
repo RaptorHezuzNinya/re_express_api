@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
-// var uniqueValidator = require('mongoose-unique-validator');
+const mongoose = require('mongoose');
 
-var PaymentSchema = new mongoose.Schema({
+
+const PaymentSchema = new mongoose.Schema({
 	name: { type: String, required: [true, "can't be blank"] },
 	iban: { type: String, required: [true, "can't be blank"] },
 	date: { type: String, required: [true, "can't be blank"] },
@@ -12,8 +12,6 @@ var PaymentSchema = new mongoose.Schema({
 	tenantRef: { type: mongoose.Schema.Types.ObjectId, ref: 'Tenant' }
 }, { timestamps: true });
 
-// PaymentSchema.plugin(uniqueValidator, { message: 'is already taken.' });
-
 PaymentSchema.methods.paymentToJSON = function () {
 	return {
 		_id: this.id,
@@ -22,7 +20,7 @@ PaymentSchema.methods.paymentToJSON = function () {
 		date: this.date,
 		credited: this.credited,
 		amount: this.amount,
-		meno: this.meno,
+		memo: this.memo,
 
 		userRef: this.userRef,
 		tenantRef: this.tenantRef,
