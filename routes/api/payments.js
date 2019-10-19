@@ -23,6 +23,7 @@ router.post('/payments/user', auth.required, function (req, res, next) {
         let writeStream = fs.createWriteStream(filePath);
         writeStream.write(trimmedB64Str, 'base64');
 
+
         writeStream.on('finish', () => {
             console.log('wrote all data to file');
         });
