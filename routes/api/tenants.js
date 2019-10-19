@@ -14,7 +14,7 @@ router.get('/tenants/:userRef', function (req, res, next) {
     }).catch(next);
 });
 
-router.post('/tenants', auth.required, function (req, res, next) {
+router.post('/tenant', auth.required, function (req, res, next) {
     User.findById(req.payload.id).then(function (user) {
         var tenant = new Tenant();
 
