@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
-// var uniqueValidator = require('mongoose-unique-validator');
+const mongoose = require('mongoose');
 
-var PaymentSchema = new mongoose.Schema({
+
+const PaymentSchema = new mongoose.Schema({
 	name: { type: String, required: [true, "can't be blank"] },
 	iban: { type: String, required: [true, "can't be blank"] },
 	date: { type: String, required: [true, "can't be blank"] },

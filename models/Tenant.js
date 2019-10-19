@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
-var uniqueValidator = require('mongoose-unique-validator');
+const mongoose = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
 
-var TenantSchema = new mongoose.Schema({
+const TenantSchema = new mongoose.Schema({
 	email: { type: String, lowercase: true, unique: true, required: [true, "can't be blank"], match: [/\S+@\S+\.\S+/, 'is invalid'], index: true },
 	accountHolder: { type: String, lowercase: true, unique: true, required: [true, "can't be blank"] },
 	firstName: { type: String, lowercase: true, unique: true, required: [true, "can't be blank"], match: [/^[a-zA-Z0-9]+$/, 'is invalid'] },
