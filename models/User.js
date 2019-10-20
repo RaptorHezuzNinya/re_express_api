@@ -22,25 +22,12 @@ var UserSchema = new mongoose.Schema(
 			match: [/\S+@\S+\.\S+/, 'is invalid'],
 			index: true
 		},
-		// bio: String,
-		// image: String,
-		// favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Article' }],
-		// following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 		hash: String,
 		salt: String,
 		tokens: [
 			{
 				token: {
 					type: String,
-					required: true
-				}
-			}
-		],
-		tenantRefs: [
-			{
-				tenantRef: {
-					type: mongoose.Schema.Types.ObjectId,
-					ref: 'Tenant',
 					required: true
 				}
 			}
@@ -76,10 +63,6 @@ UserSchema.methods.setToken = async function(token) {
 	await this.save();
 };
 
-UserSchema.methods.setTenantRef = async function(tenantRef) {
-	this.tenantRefs = this.tenantRefs.concat({ tenantRef });
-	await this.save();
-};
 UserSchema.methods.generateJWT = function() {
 	var today = new Date();
 	var exp = new Date(today);
@@ -97,8 +80,6 @@ UserSchema.methods.toAuthJSON = function() {
 		email: this.email,
 		token: this.generateJWT(),
 		id: this._id
-		// bio: this.bio,
-		// image: this.image
 	};
 };
 
