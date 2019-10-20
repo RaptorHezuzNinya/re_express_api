@@ -10,7 +10,7 @@
 // 		res.json(tenants);
 // 	})
 // );
-
+// https://blog.bitsrc.io/understanding-javascript-async-and-await-with-examples-a010b03926ea
 const asyncMiddleware = fn => (req, res, next) => {
 	Promise.resolve(fn(req, res, next)).catch(next);
 };

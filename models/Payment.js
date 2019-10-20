@@ -1,18 +1,20 @@
 const mongoose = require('mongoose');
 
+const PaymentSchema = new mongoose.Schema(
+	{
+		name: { type: String, required: [true, "can't be blank"] },
+		iban: { type: String, required: [true, "can't be blank"] },
+		date: { type: String, required: [true, "can't be blank"] },
+		credited: { type: Boolean, required: [true, "can't be blank"] },
+		amount: { type: Number, required: [true, "can't be blank"] },
+		memo: { type: String },
+		userRef: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+		tenantRef: { type: mongoose.Schema.Types.ObjectId, ref: 'Tenant' }
+	},
+	{ timestamps: true }
+);
 
-const PaymentSchema = new mongoose.Schema({
-	name: { type: String, required: [true, "can't be blank"] },
-	iban: { type: String, required: [true, "can't be blank"] },
-	date: { type: String, required: [true, "can't be blank"] },
-	credited: { type: Boolean, required: [true, "can't be blank"] },
-	amount: { type: Number, required: [true, "can't be blank"] },
-	memo: { type: String },
-	userRef: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-	tenantRef: { type: mongoose.Schema.Types.ObjectId, ref: 'Tenant' }
-}, { timestamps: true });
-
-PaymentSchema.methods.paymentToJSON = function () {
+PaymentSchema.methods.paymentToJSON = function() {
 	return {
 		_id: this.id,
 		name: this.name,
@@ -29,6 +31,5 @@ PaymentSchema.methods.paymentToJSON = function () {
 		createdAt: this.createdAt
 	};
 };
-
 
 mongoose.model('Payment', PaymentSchema);

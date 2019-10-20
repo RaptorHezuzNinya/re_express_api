@@ -3,59 +3,40 @@ const router = require('express').Router();
 const auth = require('../auth');
 const User = mongoose.model('User');
 const Tenant = mongoose.model('Tenant');
-// const Payment = mongoose.model('Payment');
-const csv = require('csv-parser')
-const BASE64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-const bs64 = require('base-x')(BASE64);
-const BufferStream = require('../../utils/BufferStream.js')
-const fs = require('fs');
+const Payment = mongoose.model('Payment');
 
+router.post('/payments/user', auth.required, async (req, res, next) => {
+	try {
+		const user = await getUser(req.payload.id);
+		const payments = await insertPayments(req.body, user);
+		res.json(req.body);
+	} catch (error) {
+		console.error('ERROR! ->', error);
+	}
+});
 
+const getUser = id => {
+	return User.findById(id).then(user => {
+		return user;
+	});
+};
 
-
-router.post('/payments/user', auth.required, function (req, res, next) {
-    User.findById(req.payload.id).then((user) => {
-        if (!user) { return res.sendStatus(401); }
-
-        const trimmedB64Str = req.body.file.fileData.split("base64,")[1];
-        const filePath = './tmp/tempFile.csv';
-
-        let writeStream = fs.createWriteStream(filePath);
-        writeStream.write(trimmedB64Str, 'base64');
-
-
-        writeStream.on('finish', () => {
-            console.log('wrote all data to file');
-        });
-        // // close the stream
-        writeStream.end();
-
-        // // new read the tempFile we created
-        const results = [];
-
-        fs.createReadStream(filePath)
-            .pipe(csv())
-            .on('data', (data) => results.push(data))
-            .on('end', () => {
-                for (let index = 0; index < results.length; index++) {
-                    const paymentObj = results[index];
-                    for (const [key, value] of Object.entries(paymentObj)) {
-                        console.log(key, value); // key and val of every obj
-                        Tenant.findOne({ nick: 'noname' }, function (err, obj) { console.log(obj); });
-                    }
-                    return;
-
-                }
-
-            });
-
-        fs.unlinkSync(filePath);
-        return res.sendStatus(200); ß
-    })
-
-})
-
+const insertPayments = (payments, user) => {
+	const insertedDocs = tenants.map(newTenant => {
+		// const tenant = new Tenant();
+		// tenant.email = newTenant.email;
+		// tenant.accountHolder = newTenant.accountHolder;
+		// tenant.firstName = newTenant.firstName;
+		// tenant.lastName = newTenant.lastName;
+		// tenant.iban = newTenant.iban;
+		// tenant.rent = newTenant.rent;
+		// tenant.phone = newTenant.phone;
+		// tenant.userRef = user._id;
+		// tenant.uuId = uid.randomUUID(9);
+		// tenant.save();
+		// return { ...tenant.tenantToJSON() };
+	});
+	return insertedDocs;
+};
 
 module.exports = router;
-
-
