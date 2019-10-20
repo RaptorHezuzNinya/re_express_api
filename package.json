@@ -40,6 +40,8 @@
     "underscore": "1.8.3"
   },
   "devDependencies": {
+    "eslint-config-prettier": "^6.4.0",
+    "eslint-plugin-prettier": "^3.1.1",
     "newman": "^3.8.2",
     "nodemon": "^1.11.0"
   }
