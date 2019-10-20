@@ -4,70 +4,94 @@ var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
 var secret = require('../config').secret;
 
-var UserSchema = new mongoose.Schema({
-	username: { type: String, lowercase: true, unique: true, required: [true, "can't be blank"], match: [/^[a-zA-Z0-9]+$/, 'is invalid'], index: true },
-	email: { type: String, lowercase: true, unique: true, required: [true, "can't be blank"], match: [/\S+@\S+\.\S+/, 'is invalid'], index: true },
-	// bio: String,
-	// image: String,
-	// favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Article' }],
-	// following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-	hash: String,
-	salt: String,
-	tokens: [{
-		token: {
+var UserSchema = new mongoose.Schema(
+	{
+		username: {
 			type: String,
-			required: true
-
+			lowercase: true,
+			unique: true,
+			required: [true, "can't be blank"],
+			match: [/^[a-zA-Z0-9]+$/, 'is invalid'],
+			index: true
+		},
+		email: {
+			type: String,
+			lowercase: true,
+			unique: true,
+			required: [true, "can't be blank"],
+			match: [/\S+@\S+\.\S+/, 'is invalid'],
+			index: true
+		},
+		// bio: String,
+		// image: String,
+		// favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Article' }],
+		// following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+		hash: String,
+		salt: String,
+		tokens: [
+			{
+				token: {
+					type: String,
+					required: true
+				}
+			}
+		],
+		tenantRefs: [
+			{
+				tenantRef: {
+					type: mongoose.Schema.Types.ObjectId,
+					ref: 'Tenant',
+					required: true
+				}
+			}
+		],
+		createdAt: {
+			type: Date,
+			default: Date.now
 		}
-	}],
-	tenantRefs: [{
-		tenantRef: {
-			type: mongoose.Schema.Types.ObjectId, ref: 'Tenant',
-			required: true
-		}
-	}],
-	createdAt: {
-		type: Date,
-		default: Date.now
-	}
-}, { timestamps: true });
+	},
+	{ timestamps: true }
+);
 
 UserSchema.plugin(uniqueValidator, { message: 'is already taken.' });
 
-UserSchema.methods.validPassword = function (password) {
+UserSchema.methods.validPassword = function(password) {
 	var hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
 	return this.hash === hash;
 };
 
-UserSchema.methods.setPassword = function (password) {
+UserSchema.methods.setPassword = function(password) {
 	this.salt = crypto.randomBytes(16).toString('hex');
 	this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
 };
 
-UserSchema.methods.setToken = async function (token) {
+UserSchema.methods.setToken = async function(token) {
 	if (this.tokens.length === 10) {
 		this.tokens.pop();
-		this.tokens = this.tokens.concat({ token })
-		console.log("WE HAVE 10 unicorn");
+		this.tokens = this.tokens.concat({ token });
+
 		return await this.save();
 	}
-	this.tokens = this.tokens.concat({ token })
-	await this.save()
+	this.tokens = this.tokens.concat({ token });
+	await this.save();
 };
 
-UserSchema.methods.setTenantRef = async function (tenantRef) {
+UserSchema.methods.setTenantRef = async function(tenantRef) {
 	this.tenantRefs = this.tenantRefs.concat({ tenantRef });
-	await this.save()
+	await this.save();
 };
-UserSchema.methods.generateJWT = function () {
+UserSchema.methods.generateJWT = function() {
 	var today = new Date();
 	var exp = new Date(today);
 	exp.setDate(today.getDate() + 60);
-	var token = jwt.sign({ id: this._id, email: this.email, uuId: this.uuId, exp: parseInt(exp.getTime() / 1000) }, secret);
+	var token = jwt.sign(
+		{ id: this._id, email: this.email, uuId: this.uuId, exp: parseInt(exp.getTime() / 1000) },
+		secret
+	);
 	return token;
 };
 
-UserSchema.methods.toAuthJSON = function () {
+UserSchema.methods.toAuthJSON = function() {
 	return {
 		username: this.username,
 		email: this.email,
@@ -78,16 +102,16 @@ UserSchema.methods.toAuthJSON = function () {
 	};
 };
 
-UserSchema.methods.toProfileJSONFor = function (user) {
+UserSchema.methods.toProfileJSONFor = function(user) {
 	return {
-		username: this.username,
+		username: this.username
 		// bio: this.bio,
 		// image: this.image || 'https://static.productionready.io/images/smiley-cyrus.jpg',
 		// following: user ? user.isFollowing(this._id) : false
 	};
 };
 
-UserSchema.methods.favorite = function (id) {
+UserSchema.methods.favorite = function(id) {
 	if (this.favorites.indexOf(id) === -1) {
 		this.favorites.push(id);
 	}
@@ -95,18 +119,18 @@ UserSchema.methods.favorite = function (id) {
 	return this.save();
 };
 
-UserSchema.methods.unfavorite = function (id) {
+UserSchema.methods.unfavorite = function(id) {
 	this.favorites.remove(id);
 	return this.save();
 };
 
-UserSchema.methods.isFavorite = function (id) {
-	return this.favorites.some(function (favoriteId) {
+UserSchema.methods.isFavorite = function(id) {
+	return this.favorites.some(function(favoriteId) {
 		return favoriteId.toString() === id.toString();
 	});
 };
 
-UserSchema.methods.follow = function (id) {
+UserSchema.methods.follow = function(id) {
 	if (this.following.indexOf(id) === -1) {
 		this.following.push(id);
 	}
@@ -114,13 +138,13 @@ UserSchema.methods.follow = function (id) {
 	return this.save();
 };
 
-UserSchema.methods.unfollow = function (id) {
+UserSchema.methods.unfollow = function(id) {
 	this.following.remove(id);
 	return this.save();
 };
 
-UserSchema.methods.isFollowing = function (id) {
-	return this.following.some(function (followId) {
+UserSchema.methods.isFollowing = function(id) {
+	return this.following.some(function(followId) {
 		return followId.toString() === id.toString();
 	});
 };

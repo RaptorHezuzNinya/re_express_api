@@ -1,21 +1,44 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 
-const TenantSchema = new mongoose.Schema({
-	email: { type: String, lowercase: true, unique: true, required: [true, "can't be blank"], match: [/\S+@\S+\.\S+/, 'is invalid'], index: true },
-	accountHolder: { type: String, lowercase: true, unique: true, required: [true, "can't be blank"] },
-	firstName: { type: String, lowercase: true, unique: true, required: [true, "can't be blank"], match: [/^[a-zA-Z0-9]+$/, 'is invalid'] },
-	lastName: { type: String, lowercase: true, unique: true, required: [true, "can't be blank"], match: [/^[a-zA-Z0-9]+$/, 'is invalid'] },
-	iban: { type: String, lowercase: true, unique: true, required: [true, "can't be blank"] },
-	rent: Number,
-	phone: { type: Number },
-	uuId: { type: String, lowercase: true, unique: true, required: [true, "can't be blank"] },
-	userRef: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
-}, { timestamps: true });
+const TenantSchema = new mongoose.Schema(
+	{
+		email: {
+			type: String,
+			lowercase: true,
+			unique: true,
+			required: [true, "can't be blank"],
+			match: [/\S+@\S+\.\S+/, 'is invalid'],
+			index: true
+		},
+		accountHolder: {
+			type: String,
+			lowercase: true,
+			unique: true,
+			required: [true, "can't be blank"]
+		},
+		firstName: {
+			type: String,
+			lowercase: true,
+			required: [true, "can't be blank"]
+		},
+		lastName: {
+			type: String,
+			lowercase: true,
+			required: [true, "can't be blank"]
+		},
+		iban: { type: String, unique: true, required: [true, "can't be blank"] },
+		rent: { type: Number },
+		phone: { type: Number },
+		uuId: { type: String, lowercase: true, unique: true },
+		userRef: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+	},
+	{ timestamps: true }
+);
 
 TenantSchema.plugin(uniqueValidator, { message: 'is already taken.' });
 
-TenantSchema.methods.tenantToJSON = function () {
+TenantSchema.methods.tenantToJSON = function() {
 	return {
 		_id: this.id,
 		email: this.email,
@@ -31,6 +54,5 @@ TenantSchema.methods.tenantToJSON = function () {
 		createdAt: this.createdAt
 	};
 };
-
 
 mongoose.model('Tenant', TenantSchema);

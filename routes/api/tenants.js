@@ -42,11 +42,13 @@ router.post('/tenant', auth.required, function(req, res, next) {
 });
 
 router.post('/tenants', auth.required, (req, res, next) => {
-	User.findById(req.payload.id).then(user => {
-		const data = [];
+	return Promise.all([User.findById(req.payload.id)]).then(results => {
+		const user = results[0];
+		const createdDocuments = [];
 		for (let index = 0; index < req.body.length; index++) {
 			const newTenant = req.body[index];
-			var tenant = new Tenant();
+
+			const tenant = new Tenant();
 
 			tenant.email = newTenant.email;
 			tenant.accountHolder = newTenant.accountHolder;
