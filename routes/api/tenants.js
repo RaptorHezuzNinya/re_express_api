@@ -42,28 +42,31 @@ router.post('/tenant', auth.required, function(req, res, next) {
 });
 
 router.post('/tenants', auth.required, (req, res, next) => {
-	return Promise.all([User.findById(req.payload.id)]).then(results => {
-		const user = results[0];
-		const createdDocuments = [];
-		for (let index = 0; index < req.body.length; index++) {
-			const newTenant = req.body[index];
+	Promise.all([User.findById(req.payload.id)])
+		.then(results => {
+			const user = results[0];
+			const createdDocuments = [];
+			for (let index = 0; index < req.body.length; index++) {
+				const newTenant = req.body[index];
 
-			const tenant = new Tenant();
+				const tenant = new Tenant();
 
-			tenant.email = newTenant.email;
-			tenant.accountHolder = newTenant.accountHolder;
-			tenant.firstName = newTenant.firstName;
-			tenant.lastName = newTenant.lastName;
-			tenant.iban = newTenant.iban;
-			tenant.rent = newTenant.rent;
-			tenant.phone = newTenant.phone;
-			tenant.userRef = user._id;
-			tenant.uuId = uid.randomUUID(9);
-			tenant.save().then(() => {
-				createdDocuments.push({ ...tenant.tenantToJSON() });
-			});
-		}
-	});
+				tenant.email = newTenant.email;
+				tenant.accountHolder = newTenant.accountHolder;
+				tenant.firstName = newTenant.firstName;
+				tenant.lastName = newTenant.lastName;
+				tenant.iban = newTenant.iban;
+				tenant.rent = newTenant.rent;
+				tenant.phone = newTenant.phone;
+				tenant.userRef = user._id;
+				tenant.uuId = uid.randomUUID(9);
+				tenant.save().then(() => {
+					createdDocuments.push({ ...tenant.tenantToJSON() });
+				});
+			}
+			return res.sendStatus(200).res.json({ tenants: createdDocuments });
+		})
+		.catch(next);
 });
 
 module.exports = router;
