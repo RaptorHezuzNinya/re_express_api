@@ -60,31 +60,10 @@ router.post('/tenants', auth.required, (req, res, next) => {
 			tenant.userRef = user._id;
 			tenant.uuId = uid.randomUUID(9);
 			tenant.save().then(() => {
-				user.setTenantRef(tenant);
-				data.push({ ...tenant.tenantToJSON() });
+				createdDocuments.push({ ...tenant.tenantToJSON() });
 			});
 		}
-		return res.sendStatus(200);
 	});
 });
 
 module.exports = router;
-
-// const myPromise = () => (
-// new Promise((resolve, reject) => {
-//     //do something, fetch something....
-//     //you guessed it, mongo queries go here.
-//     db.collection('your_collection').find(...)
-//     //I can continue to process my result inside my promise
-//     .then(function(result){
-//         //another query can be called based on my result...
-//         return updatedResult;
-//     })
-//      //This promise may take a while...
-//      .then(function(result){
-//          //post processing, non related mongo code...
-//          //when you are ready, you can resolve the promise.
-//          resolve(result);
-//     });
-// })
-// )
