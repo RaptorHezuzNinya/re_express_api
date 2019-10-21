@@ -8,8 +8,17 @@ const Payment = mongoose.model('Payment');
 router.post('/payments/user', auth.required, async (req, res, next) => {
 	try {
 		const user = await getUser(req.payload.id);
-		const payments = await insertPayments(req.body, user);
-		res.json(req.body);
+		await insertPayments(req.body, user);
+		// so far works
+		let holder;
+		Promise.resolve(user ? Payment.find({ userRef: user._id }) : null)
+			.then(payments => {
+				const payload = payments.map(payment => {
+					return { ...payment.paymentToJSON() };
+				});
+				return res.json(payload);
+			})
+			.catch(next);
 	} catch (error) {
 		console.error('ERROR! ->', error);
 	}
@@ -22,21 +31,44 @@ const getUser = id => {
 };
 
 const insertPayments = (payments, user) => {
-	const insertedDocs = tenants.map(newTenant => {
-		// const tenant = new Tenant();
-		// tenant.email = newTenant.email;
-		// tenant.accountHolder = newTenant.accountHolder;
-		// tenant.firstName = newTenant.firstName;
-		// tenant.lastName = newTenant.lastName;
-		// tenant.iban = newTenant.iban;
-		// tenant.rent = newTenant.rent;
-		// tenant.phone = newTenant.phone;
-		// tenant.userRef = user._id;
-		// tenant.uuId = uid.randomUUID(9);
-		// tenant.save();
-		// return { ...tenant.tenantToJSON() };
+	payments.forEach(payment => {
+		Tenant.findOne({ iban: payment.iban }).then(tenant => {
+			const newPayment = new Payment();
+
+			newPayment.name = payment.name;
+			newPayment.iban = payment.iban;
+			newPayment.date = payment.date;
+			newPayment.credited = payment.credited;
+			newPayment.amount = payment.amount;
+			newPayment.memo = payment.memo;
+			newPayment.userRef = user._id;
+			newPayment.tenantRef = tenant._id;
+			newPayment.save((err, newPayment) => {
+				// console.log(newPayment);
+				if (err) {
+					console.log(err);
+				}
+			});
+		});
 	});
-	return insertedDocs;
 };
 
 module.exports = router;
+
+// const insertedDocs = payments.map(payment => {
+// 	Tenant.findOne({ iban: payment.iban }).then(tenant => {
+// 		const newPayment = new Payment();
+
+// 		newPayment.name = payment.name;
+// 		newPayment.iban = payment.iban;
+// 		newPayment.date = payment.date;
+// 		newPayment.credited = payment.credited;
+// 		newPayment.amount = payment.amount;
+// 		newPayment.memo = payment.memo;
+// 		newPayment.userRef = user._id;
+// 		newPayment.tenantRef = tenant._id;
+// 		newPayment.save();
+// 		return { ...newPayment.paymentToJSON() };
+// 	});
+// });
+// return insertedDocs;
