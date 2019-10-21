@@ -4,7 +4,6 @@ const router = require('express').Router();
 const Tenant = mongoose.model('Tenant');
 const User = mongoose.model('User');
 const auth = require('../auth');
-
 const ShortUniqueId = require('short-unique-id');
 const uid = new ShortUniqueId();
 
