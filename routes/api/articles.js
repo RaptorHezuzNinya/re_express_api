@@ -6,34 +6,34 @@ var User = mongoose.model('User');
 var auth = require('../auth');
 
 // Preload article objects on routes with ':article'
-router.param('article', function(req, res, next, slug) {
-	Article.findOne({ slug: slug })
-		.populate('author')
-		.then(function(article) {
-			if (!article) {
-				return res.sendStatus(404);
-			}
+// router.param('article', function(req, res, next, slug) {
+// 	Article.findOne({ slug: slug })
+// 		.populate('author')
+// 		.then(function(article) {
+// 			if (!article) {
+// 				return res.sendStatus(404);
+// 			}
 
-			req.article = article;
+// 			req.article = article;
 
-			return next();
-		})
-		.catch(next);
-});
+// 			return next();
+// 		})
+// 		.catch(next);
+// });
 
-router.param('comment', function(req, res, next, id) {
-	Comment.findById(id)
-		.then(function(comment) {
-			if (!comment) {
-				return res.sendStatus(404);
-			}
+// router.param('comment', function(req, res, next, id) {
+// 	Comment.findById(id)
+// 		.then(function(comment) {
+// 			if (!comment) {
+// 				return res.sendStatus(404);
+// 			}
 
-			req.comment = comment;
+// 			req.comment = comment;
 
-			return next();
-		})
-		.catch(next);
-});
+// 			return next();
+// 		})
+// 		.catch(next);
+// });
 
 router.get('/', auth.optional, function(req, res, next) {
 	var query = {};

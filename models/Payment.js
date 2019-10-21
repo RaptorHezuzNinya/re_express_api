@@ -14,6 +14,8 @@ const PaymentSchema = new mongoose.Schema(
 	{ timestamps: true }
 );
 
+PaymentSchema.plugin(uniqueValidator, { message: 'is already taken.' });
+
 PaymentSchema.methods.paymentToJSON = function() {
 	return {
 		_id: this.id,
@@ -23,10 +25,8 @@ PaymentSchema.methods.paymentToJSON = function() {
 		credited: this.credited,
 		amount: this.amount,
 		memo: this.memo,
-
 		userRef: this.userRef,
 		tenantRef: this.tenantRef,
-
 		updatedAt: this.updatedAt,
 		createdAt: this.createdAt
 	};
