@@ -55,4 +55,4 @@ TenantSchema.methods.tenantToJSON = function() {
 	};
 };
 
-mongoose.model('Tenant', TenantSchema);
+module.exports = mongoose.model('Tenant', TenantSchema);

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-var uniqueValidator = require('mongoose-unique-validator');
+
 const PaymentSchema = new mongoose.Schema(
 	{
 		name: { type: String, required: [true, "can't be blank"] },
@@ -14,7 +14,7 @@ const PaymentSchema = new mongoose.Schema(
 	{ timestamps: true }
 );
 
-PaymentSchema.plugin(uniqueValidator, { message: 'is already taken.' });
+// PaymentSchema.plugin(uniqueValidator, { message: 'is already taken.' });
 
 PaymentSchema.methods.paymentToJSON = function() {
 	return {
@@ -32,4 +32,4 @@ PaymentSchema.methods.paymentToJSON = function() {
 	};
 };
 
-mongoose.model('Payment', PaymentSchema);
+module.exports = mongoose.model('Payment', PaymentSchema);
