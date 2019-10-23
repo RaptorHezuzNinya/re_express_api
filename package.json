@@ -1,48 +1,58 @@
 {
-  "name": "conduit-node",
-  "version": "1.0.0",
-  "description": "conduit on node",
-  "main": "app.js",
-  "scripts": {
-    "mongo:start": "docker run --name realworld-mongo -p 27017:27017 mongo & sleep 5",
-    "start": "node ./app.js",
-    "dev": "nodemon ./app.js",
-    "test": "newman run ./tests/api-tests.postman.json -e ./tests/env-api-tests.postman.json",
-    "stop": "lsof -ti :3000 | xargs kill",
-    "mongo:stop": "docker stop realworld-mongo && docker rm realworld-mongo"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/gothinkster/productionready-node-api.git"
-  },
-  "license": "ISC",
-  "dependencies": {
-    "base-x": "^3.0.7",
-    "body-parser": "^1.19.0",
-    "cors": "2.7.1",
-    "csv-parser": "^2.3.1",
-    "ejs": "2.5.5",
-    "errorhandler": "1.4.3",
-    "express": "^4.17.1",
-    "express-jwt": "3.3.0",
-    "express-session": "^1.16.2",
-    "jsonwebtoken": "7.1.9",
-    "method-override": "2.3.10",
-    "methods": "1.1.2",
-    "mongoose": "4.4.10",
-    "mongoose-unique-validator": "2.0.3",
-    "morgan": "^1.9.1",
-    "passport": "0.3.2",
-    "passport-local": "1.0.0",
-    "request": "^2.88.0",
-    "short-unique-id": "^1.1.1",
-    "slug": "0.9.1",
-    "underscore": "1.8.3"
-  },
-  "devDependencies": {
-    "eslint-config-prettier": "^6.4.0",
-    "eslint-plugin-prettier": "^3.1.1",
-    "newman": "^3.8.2",
-    "nodemon": "^1.11.0"
-  }
+	"name": "conduit-node",
+	"version": "1.0.0",
+	"description": "conduit on node",
+	"main": "app.js",
+	"scripts": {
+		"build": "rm -rf dist && webpack --mode development",
+		"start": "node ./dist/server.js",
+		"buildDev": "rm -rf dist && webpack --mode development --config webpack.dev.config.js",
+		"buildProd": "rm -rf dist && webpack --mode production --config webpack.prod.config.js",
+		"test": "newman run ./tests/api-tests.postman.json -e ./tests/env-api-tests.postman.json",
+		"stop": "lsof -ti :3000 | xargs kill",
+		"mongo:start": "docker run --name realworld-mongo -p 27017:27017 mongo & sleep 5",
+		"mongo:stop": "docker stop realworld-mongo && docker rm realworld-mongo"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/gothinkster/productionready-node-api.git"
+	},
+	"license": "ISC",
+	"dependencies": {
+		"@babel/runtime": "^7.6.3",
+		"base-x": "^3.0.7",
+		"body-parser": "^1.19.0",
+		"cors": "2.7.1",
+		"csv-parser": "^2.3.1",
+		"ejs": "2.5.5",
+		"errorhandler": "1.4.3",
+		"express": "^4.17.1",
+		"express-jwt": "3.3.0",
+		"express-session": "^1.16.2",
+		"jsonwebtoken": "7.1.9",
+		"method-override": "2.3.10",
+		"methods": "1.1.2",
+		"mongoose": "4.4.10",
+		"mongoose-unique-validator": "2.0.3",
+		"morgan": "^1.9.1",
+		"passport": "0.3.2",
+		"passport-local": "1.0.0",
+		"request": "^2.88.0",
+		"short-unique-id": "^1.1.1",
+		"slug": "0.9.1",
+		"underscore": "1.8.3"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.6.4",
+		"@babel/plugin-transform-runtime": "^7.6.2",
+		"@babel/preset-env": "^7.6.3",
+		"babel-loader": "^8.0.6",
+		"eslint-config-prettier": "^6.4.0",
+		"eslint-plugin-prettier": "^3.1.1",
+		"newman": "^3.8.2",
+		"nodemon": "^1.11.0",
+		"webpack": "^4.41.2",
+		"webpack-cli": "^3.3.9",
+		"webpack-node-externals": "^1.7.2"
+	}
 }
