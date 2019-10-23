@@ -86,4 +86,4 @@ router.post('/users', function(req, res, next) {
 		.catch(next);
 });
 
-module.exports = router;
+export default userRoutes;
