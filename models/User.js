@@ -130,4 +130,4 @@ UserSchema.methods.isFollowing = function(id) {
 	});
 };
 
-module.exports = mongoose.model('User', UserSchema);
+export const User = mongoose.model('User', UserSchema);
