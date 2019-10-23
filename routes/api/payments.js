@@ -34,4 +34,15 @@ router.post('/payments', auth.required, (req, res, next) => {
 		.catch(next);
 });
 
+router.get('/payments', auth.required, (req, res, next) => {
+	Payment.find({ userRef: req.payload.id })
+		.then(payments => {
+			const result = payments.map(payment => {
+				return payment.paymentToJSON();
+			});
+			return res.json(result);
+		})
+		.catch();
+});
+
 module.exports = router;

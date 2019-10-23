@@ -31,7 +31,8 @@ const TenantSchema = new mongoose.Schema(
 		rent: { type: Number },
 		phone: { type: Number },
 		uuId: { type: String, lowercase: true, unique: true },
-		userRef: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+		userRef: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+		paymentRefs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Payment' }]
 	},
 	{ timestamps: true }
 );
