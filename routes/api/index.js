@@ -1,24 +1,25 @@
-var router = require('express').Router();
-
-router.use('/', require('./users'));
+// var router = require('express').Router();
+import router from 'express';
+import userRoutes from '../api/users.js';
+router.use('/', UserRoutes);
 router.use('/profiles', require('./profiles'));
 router.use('/articles', require('./articles'));
 router.use('/tags', require('./tags'));
 router.use('/', require('./tenants.js'));
 router.use('/', require('./payments.js'));
 
-router.use(function (err, req, res, next) {
-  if (err.name === 'ValidationError') {
-    return res.status(422).json({
-      errors: Object.keys(err.errors).reduce(function (errors, key) {
-        errors[key] = err.errors[key].message;
+router.use(function(err, req, res, next) {
+	if (err.name === 'ValidationError') {
+		return res.status(422).json({
+			errors: Object.keys(err.errors).reduce(function(errors, key) {
+				errors[key] = err.errors[key].message;
 
-        return errors;
-      }, {})
-    });
-  }
+				return errors;
+			}, {})
+		});
+	}
 
-  return next(err);
+	return next(err);
 });
 
 module.exports = router;

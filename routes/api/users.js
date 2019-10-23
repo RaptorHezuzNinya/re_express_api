@@ -1,7 +1,8 @@
+// var User = mongoose.model('User');
+import { User } from '../../models/User.js';
 var mongoose = require('mongoose');
 var router = require('express').Router();
 var passport = require('passport');
-var User = mongoose.model('User');
 var auth = require('../auth');
 
 router.get('/user', auth.required, function(req, res, next) {
